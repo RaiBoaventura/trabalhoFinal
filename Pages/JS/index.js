@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         localStorage.setItem("empresaData", JSON.stringify(empresaData));
-        window.location.href = "/HTML/socios.html";
+        window.location.href = "socios.html";
     });
 
     fileInputs.forEach(fileInput => {

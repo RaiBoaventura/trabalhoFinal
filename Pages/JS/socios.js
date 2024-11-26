@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Redirecionar para a página bancos.html ao clicar em "Avançar"
     avancarBtn.addEventListener("click", () => {
         localStorage.setItem("sociosData", JSON.stringify(sociosData));
-        window.location.href = "/HTML/bancos.html";
+        window.location.href = "bancos.html";
     });
 
     // Preencher os campos dos sócios automaticamente ao carregar
