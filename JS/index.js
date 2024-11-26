@@ -2,6 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const cnpjInput = document.getElementById("cnpj");
     const continuarBtn = document.getElementById("continuar-btn");
     const cnpjError = document.getElementById("cnpj-error");
+    const fileInputs = [
+        { id: "contratoSocial", name: "Contrato Social e última alteração" },
+        { id: "cartaoCNPJ", name: "Cartão CNPJ atualizado" },
+        { id: "relacaoFaturamento", name: "Relação de faturamento dos últimos 12 meses" },
+    ];
 
     // Função para validar CNPJ
     function validarCNPJ(cnpj) {
@@ -73,6 +78,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Função para armazenar os dados dos sócios
+    function armazenarDadosSocios(qsaData) {
+        if (!Array.isArray(qsaData)) return;
+
+        const sociosData = qsaData.map((socio) => ({
+            nome: socio.nome_socio,
+            qualificacao: socio.qualificacao_socio,
+            faixaEtaria: socio.faixa_etaria,
+            dataEntrada: socio.data_entrada_sociedade,
+            cpfCnpj: socio.cnpj_cpf_do_socio,
+        }));
+
+        localStorage.setItem("sociosData", JSON.stringify(sociosData));
+    }
+
     // Função para formatar valor para moeda brasileira (R$)
     function formatarParaMoeda(valor) {
         const numero = parseFloat(valor.toString().replace(/[^\d.-]/g, '').replace(',', '.')) || 0;
@@ -82,33 +102,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
- // Função para armazenar os dados dos sócios a partir da API (qsa)
-function armazenarDadosSocios(qsaData) {
-    if (!Array.isArray(qsaData)) {
-        console.error("Dados de sócios inválidos.");
-        return;
+    // Validação dos campos obrigatórios e arquivos anexados
+    function validarFormulario() {
+        const allFieldsFilled = Array.from(document.querySelectorAll("#pj-form input[required]"))
+            .every((input) => input.value.trim() !== "");
+
+        const allFilesUploaded = fileInputs.every((fileInput) => {
+            const inputElement = document.getElementById(fileInput.id);
+            return inputElement.files.length > 0;
+        });
+
+        continuarBtn.disabled = !(allFieldsFilled && allFilesUploaded);
     }
 
-    // Extrair os campos relevantes dos sócios
-    const sociosData = qsaData.map((socio) => ({
-        nome: socio.nome_socio,
-        qualificacao: socio.qualificacao_socio,
-        faixaEtaria: socio.faixa_etaria,
-        dataEntrada: socio.data_entrada_sociedade,
-        cpfCnpj: socio.cnpj_cpf_do_socio,
-    }));
+    // Eventos para validar o formulário dinamicamente
+    document.querySelectorAll("#pj-form input[required]").forEach((field) => {
+        field.addEventListener("input", validarFormulario);
+    });
 
-    // Armazenar os dados dos sócios no localStorage
-    localStorage.setItem("sociosData", JSON.stringify(sociosData));
-    console.log("Dados dos sócios armazenados com sucesso:", sociosData);
-}
-
-
-    // Evento para formatar o campo Capital Social
-    const capitalSocialInput = document.getElementById("capitalSocial");
-    capitalSocialInput.addEventListener("input", (event) => {
-        const valor = event.target.value;
-        event.target.value = formatarParaMoeda(valor);
+    fileInputs.forEach((fileInput) => {
+        const inputElement = document.getElementById(fileInput.id);
+        inputElement.addEventListener("change", validarFormulario);
     });
 
     // Validação e consulta do CNPJ ao perder o foco
@@ -121,19 +135,11 @@ function armazenarDadosSocios(qsaData) {
             cnpjError.textContent = "CNPJ inválido. Verifique o número e tente novamente.";
             cnpjError.style.display = "block";
         }
+
+        validarFormulario(); // Revalidar após o preenchimento do CNPJ
     });
 
-    // Habilitar o botão "Salvar e Continuar" apenas se todos os campos obrigatórios estiverem preenchidos
-    const formFields = document.querySelectorAll("#pj-form input[required]");
-
-    formFields.forEach((field) => {
-        field.addEventListener("input", () => {
-            const allFilled = Array.from(formFields).every((input) => input.value.trim() !== "");
-            continuarBtn.disabled = !allFilled;
-        });
-    });
-
-    // Armazenar os dados da empresa e redirecionar para a página de Sócios
+    // Botão para salvar e continuar
     continuarBtn.addEventListener("click", () => {
         const empresaData = {
             razaoSocial: document.getElementById("razaoSocial").value,
@@ -148,31 +154,9 @@ function armazenarDadosSocios(qsaData) {
         };
 
         localStorage.setItem("empresaData", JSON.stringify(empresaData));
-        window.location.href = "socios.html";
+        window.location.href = "/HTML/socios.html";
     });
 
-    const fileInputs = [
-        { id: "contratoSocial", name: "Contrato Social e última alteração" },
-        { id: "cartaoCNPJ", name: "Cartão CNPJ atualizado" },
-        { id: "relacaoFaturamento", name: "Relação de faturamento dos últimos 12 meses" },
-      ];
-    
-      document.getElementById("continuar-btn").addEventListener("click", () => {
-        const missingFiles = fileInputs.filter((fileInput) => {
-          const inputElement = document.getElementById(fileInput.id);
-          return !inputElement.files.length;
-        });
-    
-        if (missingFiles.length > 0) {
-          alert(
-            `Por favor, anexe os seguintes documentos antes de continuar:\n` +
-            missingFiles.map((file) => `- ${file.name}`).join("\n")
-          );
-          return;
-        }
-    
-        alert("Todos os documentos foram anexados corretamente.");
-        // Aqui você pode implementar o envio dos arquivos para o servidor, se necessário.
-      });
+    // Validação inicial ao carregar a página
+    validarFormulario();
 });
-
