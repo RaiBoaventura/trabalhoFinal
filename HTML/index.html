@@ -6,7 +6,7 @@
   <title>Cadastro de Pessoa Jurídica</title>
   <link href="/bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/CSS/style.css">
-  <script type="text/javascript" src="../JS/index.js" defer></script>
+  <script type="text/javascript" src="/JS/index.js" defer></script>
 </head>
 <body>
   <div class="container my-5">
@@ -109,26 +109,43 @@
           </div>
         </div>
       </div>
-<!-- Campo para anexar documentos -->
-<div class="card p-4 mb-4">
-  <h2 class="text-primary">Anexar Documentos</h2>
-  <p class="text-secondary">Por favor, anexe os documentos obrigatórios listados abaixo:</p>
-  <div class="mb-3">
-    <label for="contratoSocial" class="form-label">Cópia do Contrato Social e última alteração:</label>
-    <input type="file" class="form-control" id="contratoSocial" required>
-    <small class="text-secondary">Formatos aceitos: PDF, JPEG, PNG, DOCX.</small>
-  </div>
-  <div class="mb-3">
-    <label for="cartaoCNPJ" class="form-label">Cópia do Cartão CNPJ (atualizado):</label>
-    <input type="file" class="form-control" id="cartaoCNPJ" required>
-    <small class="text-secondary">Formatos aceitos: PDF, JPEG, PNG, DOCX.</small>
-  </div>
-  <div class="mb-3">
-    <label for="relacaoFaturamento" class="form-label">Relação de faturamento dos últimos 12 meses assinada pelo contador:</label>
-    <input type="file" class="form-control" id="relacaoFaturamento" required>
-    <small class="text-secondary">Formatos aceitos: PDF, JPEG, PNG, DOCX.</small>
-  </div>
-</div>
+      <div id="upload-section" class="card p-4 mb-4">
+        <h2 class="text-primary">Anexar Documentos</h2>
+        <p class="text-secondary">Arraste os arquivos ou clique nos campos abaixo para anexar.</p>
+      
+        <!-- Contrato Social -->
+        <div class="mb-3">
+          <h4 class="text-secondary">Contrato Social e Última Alteração</h4>
+          <div id="contrato-drop-zone" class="drop-zone">
+            <input type="file" id="contratoSocial" multiple style="display: none;">
+            <p>Clique ou arraste para anexar</p>
+          </div>
+          <ul id="contrato-list" class="file-list"></ul>
+        </div>
+      
+        <!-- Cartão CNPJ -->
+        <div class="mb-3">
+          <h4 class="text-secondary">Cartão CNPJ Atualizado</h4>
+          <div id="cnpj-drop-zone" class="drop-zone">
+            <input type="file" id="cartaoCNPJ" multiple style="display: none;">
+            <p>Clique ou arraste para anexar</p>
+          </div>
+          <ul id="cnpj-list" class="file-list"></ul>
+        </div>
+      
+        <!-- Relação de Faturamento -->
+        <div class="mb-3">
+          <h4 class="text-secondary">Relação de Faturamento dos Últimos 12 Meses</h4>
+          <div id="faturamento-drop-zone" class="drop-zone">
+            <input type="file" id="relacaoFaturamento" multiple style="display: none;">
+            <p>Clique ou arraste para anexar</p>
+          </div>
+          <ul id="faturamento-list" class="file-list"></ul>
+        </div>
+      </div>
+      
+      
+
 
 
       <!-- Botões -->
