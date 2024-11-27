@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Pessoa Jurídica</title>
+  <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="CSS/style.css">
+  <script type="text/javascript" src="JS/index.js" defer></script>
+</head>
+<body>
+  <div class="container my-5">
+    <header class="text-center mb-4">
+      <h1 class="text-primary">Cadastro de Pessoa Jurídica</h1>
+      <p class="text-secondary">Preencha as informações abaixo para cadastrar sua empresa.</p>
+    </header>
+
+    <form id="pj-form">
+      <!-- Seção: Dados da Pessoa Jurídica -->
+      <div class="card p-4 mb-4">
+        <h2 class="text-primary">Dados da Pessoa Jurídica</h2>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="cnpj" class="form-label">CNPJ:</label>
+            <input type="text" class="form-control" id="cnpj" placeholder="Digite o CNPJ" required>
+            <div id="cnpj-error" class="text-danger d-none">CNPJ inválido. Verifique e tente novamente.</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="razaoSocial" class="form-label">Razão Social:</label>
+            <input type="text" class="form-control" id="razaoSocial" placeholder="Razão Social" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="nomeFantasia" class="form-label">Nome Fantasia:</label>
+            <input type="text" class="form-control" id="nomeFantasia" placeholder="Nome Fantasia">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="inscricaoEstadual" class="form-label">Inscrição Estadual:</label>
+            <input type="text" class="form-control" id="inscricaoEstadual" placeholder="Inscrição Estadual" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="ramoAtividade" class="form-label">Ramo de Atividade:</label>
+            <input type="text" class="form-control" id="ramoAtividade" placeholder="Ramo de Atividade" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="dataFundacao" class="form-label">Data de Fundação:</label>
+            <input type="date" class="form-control" id="dataFundacao" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="capitalSocial" class="form-label">Capital Social (R$):</label>
+            <input type="text" class="form-control" id="capitalSocial" placeholder="Digite o valor em reais (R$)" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção: Dados Adicionais -->
+      <div class="card p-4 mb-4">
+        <h2 class="text-primary">Dados Adicionais</h2>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="telefones" class="form-label">Telefones:</label>
+            <input type="text" class="form-control" id="telefones" placeholder="Digite o telefone" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="conta" class="form-label">Conta:</label>
+            <input type="text" class="form-control" id="conta" placeholder="Conta bancária" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="email" class="form-label">E-mail:</label>
+            <input type="email" class="form-control" id="email" placeholder="Digite o e-mail" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="site" class="form-label">Site:</label>
+            <input type="url" class="form-control" id="site" placeholder="Digite o site">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="contador" class="form-label">Contador:</label>
+            <input type="text" class="form-control" id="contador" placeholder="Nome do contador" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="telefoneContador" class="form-label">Telefone do Contador:</label>
+            <input type="text" class="form-control" id="telefoneContador" placeholder="Telefone do contador" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção: Endereço -->
+      <div class="card p-4 mb-4">
+        <h2 class="text-primary">Endereço</h2>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="logradouro" class="form-label">Logradouro:</label>
+            <input type="text" class="form-control" id="logradouro" placeholder="Logradouro" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="numeroComplemento" class="form-label">Número/Complemento:</label>
+            <input type="text" class="form-control" id="numeroComplemento" placeholder="Número e Complemento" required>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="bairro" class="form-label">Bairro:</label>
+            <input type="text" class="form-control" id="bairro" placeholder="Bairro" required>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="cidade" class="form-label">Cidade:</label>
+            <input type="text" class="form-control" id="cidade" placeholder="Cidade" required>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="uf" class="form-label">UF:</label>
+            <input type="text" class="form-control" id="uf" value="PR" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div id="upload-section" class="card p-4 mb-4">
+  <h2 class="text-primary">Anexar Documentos</h2>
+  <p class="text-secondary mb-3">Arraste os arquivos ou clique nos campos abaixo para anexar.</p>
+  
+  <!-- Contrato Social -->
+  <div class="mb-4">
+    <h4 class="text-secondary"><i class="fas fa-file-contract"></i> Contrato Social e Última Alteração</h4>
+    <div id="contrato-drop-zone" class="drop-zone">
+      <input type="file" id="contratoSocial" multiple style="display: none;">
+      <p class="text-muted">Clique ou arraste aqui</p>
+    </div>
+    <ul id="contrato-list" class="file-list"></ul>
+  </div>
+
+  <!-- Cartão CNPJ -->
+  <div class="mb-4">
+    <h4 class="text-secondary"><i class="fas fa-id-card"></i> Cartão CNPJ Atualizado</h4>
+    <div id="cnpj-drop-zone" class="drop-zone">
+      <input type="file" id="cartaoCNPJ" multiple style="display: none;">
+      <p class="text-muted">Clique ou arraste aqui</p>
+    </div>
+    <ul id="cnpj-list" class="file-list"></ul>
+  </div>
+
+  <!-- Relação de Faturamento -->
+  <div class="mb-4">
+    <h4 class="text-secondary"><i class="fas fa-chart-line"></i> Relação de Faturamento</h4>
+    <div id="faturamento-drop-zone" class="drop-zone">
+      <input type="file" id="relacaoFaturamento" multiple style="display: none;">
+      <p class="text-muted">Clique ou arraste aqui</p>
+    </div>
+    <ul id="faturamento-list" class="file-list"></ul>
+  </div>
+</div>
+      
+      
+
+
+
+      <!-- Botões -->
+      <div class="d-flex justify-content-end">
+        <button type="button" id="continuar-btn" class="btn btn-primary">Salvar e Continuar</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
