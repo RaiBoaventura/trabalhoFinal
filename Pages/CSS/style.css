@@ -191,14 +191,14 @@ input:-webkit-autofill {
 /* Zona de Upload */
 .drop-zone {
     border: 2px dashed #ffd700;
-    border-radius: 5px;
-    padding: 15px;
+    border-radius: 10px;
+    padding: 20px;
     text-align: center;
     background-color: #2a2a2a;
     color: #ffd700;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .drop-zone:hover {
@@ -211,22 +211,20 @@ input:-webkit-autofill {
     border-color: #ffcc00;
 }
 
-/* Lista de Arquivos */
 .file-list {
-    margin-top: 10px;
     list-style-type: none;
     padding: 0;
+    margin-top: 10px;
 }
 
 .file-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #2a2a2a;
-    margin: 5px 0;
     padding: 10px;
-    border-radius: 5px;
-    color: #e0e0e0;
+    margin: 5px 0;
+    background: #333;
+    border-radius: 8px;
     animation: fadeIn 0.3s ease;
 }
 
@@ -234,14 +232,12 @@ input:-webkit-autofill {
     color: #00d9ff;
     text-decoration: none;
     font-weight: bold;
-    margin-right: 10px;
 }
 
 .file-list li a:hover {
     text-decoration: underline;
 }
 
-/* Botão de Remover Arquivo */
 .file-list .remove-btn {
     background-color: #e63946;
     border: none;
@@ -313,3 +309,4 @@ h2 {
     color: #ffd700;
     font-weight: 700;
 }
+
