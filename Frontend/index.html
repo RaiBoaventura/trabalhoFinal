@@ -6,7 +6,7 @@
   <title>Cadastro de Pessoa Jurídica</title>
   <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="CSS/style.css">
-  <script type="text/javascript" src="JS/index.js" defer></script>
+  <script type="module" src="JS/index.js" defer></script>
 </head>
 <body>
   <div class="container my-5">
@@ -26,28 +26,29 @@
             <div id="cnpj-error" class="text-danger d-none">CNPJ inválido. Verifique e tente novamente.</div>
           </div>
           <div class="col-md-6 mb-3">
-            <label for="razaoSocial" class="form-label">Razão Social:</label>
-            <input type="text" class="form-control" id="razaoSocial" placeholder="Razão Social" required>
+            <label for="razao_social" class="form-label">Razão Social:</label>
+            <input type="text" class="form-control" id="razao_social" placeholder="Razão Social" required>
           </div>
           <div class="col-md-6 mb-3">
             <label for="nomeFantasia" class="form-label">Nome Fantasia:</label>
-            <input type="text" class="form-control" id="nomeFantasia" placeholder="Nome Fantasia">
+            <input type="text" class="form-control" id="nome_fantasia" placeholder="Nome Fantasia">
           </div>
           <div class="col-md-6 mb-3">
             <label for="inscricaoEstadual" class="form-label">Inscrição Estadual:</label>
-            <input type="text" class="form-control" id="inscricaoEstadual" placeholder="Inscrição Estadual" required>
+            <input type="text" class="form-control" id="inscricao_estadual" placeholder="Inscrição Estadual" required>
           </div>
           <div class="col-md-6 mb-3">
             <label for="ramoAtividade" class="form-label">Ramo de Atividade:</label>
-            <input type="text" class="form-control" id="ramoAtividade" placeholder="Ramo de Atividade" required>
+            <input type="text" class="form-control" id="ramo_atividade" placeholder="Ramo de Atividade" required>
           </div>
           <div class="col-md-6 mb-3">
             <label for="dataFundacao" class="form-label">Data de Fundação:</label>
-            <input type="date" class="form-control" id="dataFundacao" required>
+            <input type="date" class="form-control" id="data_fundacao" required>
           </div>
           <div class="col-md-6 mb-3">
             <label for="capitalSocial" class="form-label">Capital Social (R$):</label>
-            <input type="text" class="form-control" id="capitalSocial" placeholder="Digite o valor em reais (R$)" required>
+            <input type="text" class="form-control" id="capital_social" placeholder="Digite o valor em reais (R$)" required>
+            <input type="hidden" id="capital_social_num" name="capital_social_num">
           </div>
         </div>
       </div>
@@ -61,8 +62,8 @@
             <input type="text" class="form-control" id="telefones" placeholder="Digite o telefone" required>
           </div>
           <div class="col-md-6 mb-3">
-            <label for="conta" class="form-label">Conta:</label>
-            <input type="text" class="form-control" id="conta" placeholder="Conta bancária" required>
+            <label for="conta_bancaria" class="form-label">Conta:</label>
+            <input type="text" class="form-control" id="conta_bancaria" placeholder="Conta bancária" required>
           </div>
           <div class="col-md-6 mb-3">
             <label for="email" class="form-label">E-mail:</label>
@@ -78,7 +79,7 @@
           </div>
           <div class="col-md-6 mb-3">
             <label for="telefoneContador" class="form-label">Telefone do Contador:</label>
-            <input type="text" class="form-control" id="telefoneContador" placeholder="Telefone do contador" required>
+            <input type="text" class="form-control" id="telefone_contador" placeholder="Telefone do contador" required>
           </div>
         </div>
       </div>
@@ -93,7 +94,7 @@
           </div>
           <div class="col-md-6 mb-3">
             <label for="numeroComplemento" class="form-label">Número/Complemento:</label>
-            <input type="text" class="form-control" id="numeroComplemento" placeholder="Número e Complemento" required>
+            <input type="text" class="form-control" id="numero_complemento" placeholder="Número e Complemento" required>
           </div>
           <div class="col-md-4 mb-3">
             <label for="bairro" class="form-label">Bairro:</label>
@@ -118,7 +119,7 @@
   <div class="mb-4">
     <h4 class="text-secondary"><i class="fas fa-file-contract"></i> Contrato Social e Última Alteração</h4>
     <div id="contrato-drop-zone" class="drop-zone">
-      <input type="file" id="contratoSocial" multiple style="display: none;">
+      <input type="file" id="contrato_Social" multiple style="display: none;">
       <p class="text-muted">Clique ou arraste aqui</p>
     </div>
     <ul id="contrato-list" class="file-list"></ul>
@@ -128,7 +129,7 @@
   <div class="mb-4">
     <h4 class="text-secondary"><i class="fas fa-id-card"></i> Cartão CNPJ Atualizado</h4>
     <div id="cnpj-drop-zone" class="drop-zone">
-      <input type="file" id="cartaoCNPJ" multiple style="display: none;">
+      <input type="file" id="cartao_CNPJ" multiple style="display: none;">
       <p class="text-muted">Clique ou arraste aqui</p>
     </div>
     <ul id="cnpj-list" class="file-list"></ul>
@@ -138,7 +139,7 @@
   <div class="mb-4">
     <h4 class="text-secondary"><i class="fas fa-chart-line"></i> Relação de Faturamento</h4>
     <div id="faturamento-drop-zone" class="drop-zone">
-      <input type="file" id="relacaoFaturamento" multiple style="display: none;">
+      <input type="file" id="relacao_Faturamento" multiple style="display: none;">
       <p class="text-muted">Clique ou arraste aqui</p>
     </div>
     <ul id="faturamento-list" class="file-list"></ul>
