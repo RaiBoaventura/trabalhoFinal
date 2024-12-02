@@ -76,7 +76,7 @@ app.post('/pessoa-juridica', async (req, res) => {
     const {
         cnpj, razao_social, nome_fantasia, inscricao_estadual, ramo_atividade,
         data_fundacao, capital_social, telefones, conta_bancaria, email, site,
-        contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf, contrato_Social, cartao_CNPJ, relacao_Faturamento
+        contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf
     } = req.body;
 
     try {
@@ -84,14 +84,14 @@ app.post('/pessoa-juridica', async (req, res) => {
             INSERT INTO PessoaJuridica (
                 cnpj, razao_social, nome_fantasia, inscricao_estadual, ramo_atividade,
                 data_fundacao, capital_social, telefones, conta_bancaria, email, site,
-                contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf, contrato_Social, cartao_CNPJ, relacao_Faturamento
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+                contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
             RETURNING id;
         `;
         const values = [
             cnpj, razao_social, nome_fantasia, inscricao_estadual, ramo_atividade,
             data_fundacao, capital_social, telefones, conta_bancaria, email, site,
-            contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf, contrato_Social, cartao_CNPJ, relacao_Faturamento
+            contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf
         ];
         const result = await pool.query(query, values);
         res.json({ message: "Pessoa Jurídica cadastrada com sucesso!", id: result.rows[0].id });
