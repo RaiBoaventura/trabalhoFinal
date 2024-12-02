@@ -207,8 +207,8 @@ function preencherDadosEmpresa(data) {
         validarFormulario();
     });
 
-    continuarBtn.addEventListener("click", async () => {
-        const empresaData = {
+    continuarBtn.addEventListener("click", () => {
+        const pessoaJuridica = {
             cnpj: document.getElementById("cnpj").value,
             razao_social: document.getElementById("razao_social").value,
             nome_fantasia: document.getElementById("nome_fantasia").value,
@@ -216,7 +216,7 @@ function preencherDadosEmpresa(data) {
             inscricao_estadual: document.getElementById("inscricao_estadual").value,
             ramo_atividade: document.getElementById("ramo_atividade").value,
             data_fundacao: document.getElementById("data_fundacao").value,
-            capital_social: capitalSocialNumInput.value, // Usa valor numérico para o banco
+            capital_social: capitalSocialNumInput.value, // Valor numérico
             telefones: document.getElementById("telefones").value,
             email: document.getElementById("email").value,
             site: document.getElementById("site").value,
@@ -228,15 +228,16 @@ function preencherDadosEmpresa(data) {
             cidade: document.getElementById("cidade").value,
             uf: document.getElementById("uf").value,
         };
-
+    
         try {
-            const response = await enviarPessoaJuridica(empresaData);
-            alert(response.message || "Dados salvos com sucesso!");
-            localStorage.setItem("empresaId", response.id);
+            // Armazena os dados no localStorage
+            localStorage.setItem("pessoaJuridica", JSON.stringify(pessoaJuridica));
+    
+            // Redireciona para a página de sócios
             window.location.href = "socios.html";
         } catch (error) {
-            console.error("Erro ao salvar os dados:", error);
-            alert("Erro ao salvar os dados.");
+            console.error("Erro ao armazenar os dados:", error);
+            alert("Erro ao continuar. Tente novamente.");
         }
     });
 

@@ -148,6 +148,90 @@ app.post('/socios', async (req, res) => {
     }
 });
 
+app.post('/salvar-tudo', async (req, res) => {
+    const { pessoaJuridica, socios, commercialRefs, bankRefs } = req.body;
+
+    const client = await pool.connect();
+
+    try {
+        // Inicia uma transação
+        await client.query('BEGIN');
+
+        // Inserir na tabela Pessoa Jurídica
+        const pessoaJuridicaQuery = `
+            INSERT INTO pessoajuridica (
+                cnpj, razao_social, nome_fantasia, inscricao_estadual, ramo_atividade,
+                data_fundacao, capital_social, telefones, conta_bancaria, email, site,
+                contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+            RETURNING id;
+        `;
+        const pessoaJuridicaValues = [
+            pessoaJuridica.cnpj, pessoaJuridica.razao_social, pessoaJuridica.nome_fantasia,
+            pessoaJuridica.inscricao_estadual, pessoaJuridica.ramo_atividade, pessoaJuridica.data_fundacao,
+            pessoaJuridica.capital_social, pessoaJuridica.telefones, pessoaJuridica.conta_bancaria,
+            pessoaJuridica.email, pessoaJuridica.site, pessoaJuridica.contador,
+            pessoaJuridica.telefone_contador, pessoaJuridica.logradouro, pessoaJuridica.numero_complemento,
+            pessoaJuridica.bairro, pessoaJuridica.cidade, pessoaJuridica.uf,
+        ];
+        const pessoaJuridicaResult = await client.query(pessoaJuridicaQuery, pessoaJuridicaValues);
+        const pessoaJuridicaId = pessoaJuridicaResult.rows[0].id;
+
+        // Inserir Sócios
+        for (const socio of socios) {
+            const sociosQuery = `
+                INSERT INTO socios (
+                    nome, cep, endereco, numero, bairro, cidade, uf, telefone, email
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
+            `;
+            const sociosValues = [
+                socio.nome, socio.cep, socio.endereco, socio.numero, socio.bairro,
+                socio.cidade, socio.uf, socio.telefone, socio.email,
+            ];
+            await client.query(sociosQuery, sociosValues);
+        }
+
+        // Inserir Referências Comerciais
+        for (const ref of commercialRefs) {
+            const comercialQuery = `
+                INSERT INTO referenciascomerciais (
+                    pessoa_juridica_id, fornecedor, telefone, ramo_atividade, contato
+                ) VALUES ($1, $2, $3, $4, $5);
+            `;
+            const comercialValues = [
+                pessoaJuridicaId, ref.fornecedor, ref.telefone, ref.ramo, ref.contato,
+            ];
+            await client.query(comercialQuery, comercialValues);
+        }
+
+        // Inserir Referências Bancárias
+        for (const ref of bankRefs) {
+            const bancariaQuery = `
+                INSERT INTO bancos (
+                    banco, agencia, conta, data_abertura, telefone, gerente, observacoes
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7);
+            `;
+            const bancariaValues = [
+                ref.banco, ref.agencia, ref.conta, ref.dataAbertura, ref.telefone, ref.gerente, ref.observacoes,
+            ];
+            await client.query(bancariaQuery, bancariaValues);
+        }
+
+        // Confirma a transação
+        await client.query('COMMIT');
+
+        res.json({ message: "Cadastro concluído com sucesso!" });
+    } catch (error) {
+        // Reverte a transação em caso de erro
+        await client.query('ROLLBACK');
+        console.error("Erro ao salvar os dados:", error);
+        res.status(500).json({ message: "Erro ao salvar os dados." });
+    } finally {
+        client.release();
+    }
+});
+
+
 // Servidor rodando na porta 3000
 app.listen(3000, () => {
     console.log('Servidor rodando na porta 3000');
