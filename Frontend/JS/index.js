@@ -1,5 +1,3 @@
-import { enviarPessoaJuridica } from './api.js';
-
 document.addEventListener("DOMContentLoaded", () => {
     const cnpjInput = document.getElementById("cnpj");
     const continuarBtn = document.getElementById("continuar-btn");
@@ -62,45 +60,50 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
    // === Formatar Capital Social ===
-   function formatarParaMoeda(valor) {
-    const numero = parseFloat(valor.replace(/[^\d.-]/g, '').replace(',', '.')) || 0;
-    return numero.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    });
+function formatarMoeda(inputElement) {
+    let valor = inputElement.value.replace(/[^\d]/g, ""); // Remove caracteres não numéricos
+    if (valor) {
+        valor = (parseInt(valor, 10) / 100).toFixed(2); // Divide por 100 para representar valores monetários
+        inputElement.value = new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        }).format(valor);
+    }
 }
 
 function removerFormatacao(valor) {
-    return parseFloat(valor.replace(/[^\d.-]/g, '').replace(',', '.')) || 0;
+    return parseFloat(valor.replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
 }
 
-
-// Atualizar campos de capital social
+// Evento para formatar o capital social ao digitar
 capitalSocialInput.addEventListener("input", () => {
-    const rawValue = capitalSocialInput.value; // Valor digitado pelo usuário
-    const formattedValue = formatarParaMoeda(rawValue); // Formata para exibição
-    const numericValue = removerFormatacao(rawValue); // Remove formatação para banco de dados
+    // Formata para exibição
+    formatarMoeda(capitalSocialInput);
 
-    capitalSocialInput.value = formattedValue; // Atualiza valor formatado
-    capitalSocialNumInput.value = numericValue; // Atualiza valor numérico oculto
+    // Remove a formatação para obter o valor numérico
+    const numericValue = removerFormatacao(capitalSocialInput.value);
+
+    // Atualiza o campo oculto com o valor numérico
+    capitalSocialNumInput.value = numericValue;
 });
-function preencherDadosEmpresa(data) {
-    const capitalSocialInput = document.getElementById("capital_social");
-    const capitalSocialNumInput = document.getElementById("capital_social_num");
 
+// Preenchimento automático com formatação
+function preencherDadosEmpresa(data) {
     document.getElementById("razao_social").value = data.razao_social || '';
     document.getElementById("nome_fantasia").value = data.nome_fantasia || '';
     document.getElementById("logradouro").value = data.logradouro || '';
     document.getElementById("ramo_atividade").value = data.cnae_fiscal_descricao || '';
     document.getElementById("data_fundacao").value = data.data_inicio_atividade || '';
-    
-    if (capitalSocialInput) {
-        capitalSocialInput.value = formatarParaMoeda(String(data.capital_social || '0'));
+
+    if (data.capital_social) {
+        // Atualiza o campo formatado e o campo numérico
+        capitalSocialInput.value = new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        }).format(data.capital_social);
+        capitalSocialNumInput.value = data.capital_social;
     }
-    if (capitalSocialNumInput) {
-        capitalSocialNumInput.value = removerFormatacao(String(data.capital_social || '0'));
-    }
-    
+
     document.getElementById("numero_complemento").value = data.numero || '';
     document.getElementById("bairro").value = data.bairro || '';
     document.getElementById("cidade").value = data.municipio || '';
@@ -108,6 +111,7 @@ function preencherDadosEmpresa(data) {
     document.getElementById("telefones").value = data.ddd_telefone_1 || '';
     document.getElementById("email").value = data.email || '';
 }
+
 
 
     function formatarParaMoeda(valor, valorF) {
@@ -207,8 +211,8 @@ function preencherDadosEmpresa(data) {
         validarFormulario();
     });
 
-    continuarBtn.addEventListener("click", () => {
-        const pessoaJuridica = {
+    continuarBtn.addEventListener("click", async () => {
+        const empresaData = {
             cnpj: document.getElementById("cnpj").value,
             razao_social: document.getElementById("razao_social").value,
             nome_fantasia: document.getElementById("nome_fantasia").value,
@@ -216,7 +220,7 @@ function preencherDadosEmpresa(data) {
             inscricao_estadual: document.getElementById("inscricao_estadual").value,
             ramo_atividade: document.getElementById("ramo_atividade").value,
             data_fundacao: document.getElementById("data_fundacao").value,
-            capital_social: capitalSocialNumInput.value, // Valor numérico
+            capital_social: capitalSocialNumInput.value, // Usa valor numérico para o banco
             telefones: document.getElementById("telefones").value,
             email: document.getElementById("email").value,
             site: document.getElementById("site").value,
@@ -228,16 +232,15 @@ function preencherDadosEmpresa(data) {
             cidade: document.getElementById("cidade").value,
             uf: document.getElementById("uf").value,
         };
-    
+
         try {
-            // Armazena os dados no localStorage
-            localStorage.setItem("pessoaJuridica", JSON.stringify(pessoaJuridica));
-    
-            // Redireciona para a página de sócios
+            const response = await enviarPessoaJuridica(empresaData);
+            alert(response.message || "Dados salvos com sucesso!");
+            localStorage.setItem("empresaId", response.id);
             window.location.href = "socios.html";
         } catch (error) {
-            console.error("Erro ao armazenar os dados:", error);
-            alert("Erro ao continuar. Tente novamente.");
+            console.error("Erro ao salvar os dados:", error);
+            alert("Erro ao salvar os dados.");
         }
     });
 
