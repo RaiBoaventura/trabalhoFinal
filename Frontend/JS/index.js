@@ -1,3 +1,4 @@
+import { enviarPessoaJuridica } from './api.js';
 document.addEventListener("DOMContentLoaded", () => {
     const cnpjInput = document.getElementById("cnpj");
     const continuarBtn = document.getElementById("continuar-btn");
