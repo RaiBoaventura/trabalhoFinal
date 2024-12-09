@@ -172,12 +172,4 @@ curl -X POST http://localhost:3000/pessoa-juridica \
 
 ---
 
-## Melhorias Futuras
-
-1. Adicionar autenticação para acesso restrito.
-2. Melhorar o suporte para múltiplos documentos por registro.
-3. Implementar filtros na tabela de listagem no `crud.html`.
-
----
-
 
