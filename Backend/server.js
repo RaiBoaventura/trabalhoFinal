@@ -25,127 +25,106 @@ pool.connect((err) => {
     }
 });
 
-// Endpoint para salvar dados
-app.post('/salvar', async (req, res) => {
-    const { tabela, dados } = req.body;
-    const campos = Object.keys(dados).join(", ");
-    const valores = Object.values(dados);
-    const placeholders = valores.map((_, index) => `$${index + 1}`).join(", ");
-
-    const query = `INSERT INTO ${tabela} (${campos}) VALUES (${placeholders})`;
-
-    try {
-        await pool.query(query, valores);
-        res.send('Dados salvos com sucesso!');
-    } catch (error) {
-        console.error('Erro ao salvar dados:', error);
-        res.status(500).send('Erro ao salvar dados.');
-    }
-});
-
-// **NOVO: Endpoint para consultar dados**
-app.get('/consultar/:tabela', async (req, res) => {
-    const { tabela } = req.params;
-
-    const query = `SELECT * FROM ${tabela}`;
-
-    try {
-        const resultado = await pool.query(query);
-        res.json(resultado.rows); // Retorna os dados como JSON
-    } catch (error) {
-        console.error('Erro ao consultar dados:', error);
-        res.status(500).send('Erro ao consultar dados.');
-    }
-});
-app.get('/tabelas', async (req, res) => {
-    const query = `
-        SELECT table_name
-        FROM information_schema.tables
-        WHERE table_schema = 'public';
-    `;
-
-    try {
-        const resultado = await pool.query(query);
-        res.json(resultado.rows); // Retorna a lista de tabelas no formato JSON
-    } catch (error) {
-        console.error('Erro ao listar tabelas:', error);
-        res.status(500).send('Erro ao listar tabelas.');
-    }
-});
+// **Criar Pessoa Jurídica**
 app.post('/pessoa-juridica', async (req, res) => {
-    const {
-        cnpj, razao_social, nome_fantasia, inscricao_estadual, ramo_atividade,
-        data_fundacao, capital_social, telefones, conta_bancaria, email, site,
-        contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf
-    } = req.body;
+    const { cnpj, razao_social, nome_fantasia, email } = req.body;
+
+    if (!cnpj || !razao_social || !email) {
+        return res.status(400).json({ error: "CNPJ, razão social e e-mail são obrigatórios." });
+    }
 
     try {
         const query = `
-            INSERT INTO PessoaJuridica (
-                cnpj, razao_social, nome_fantasia, inscricao_estadual, ramo_atividade,
-                data_fundacao, capital_social, telefones, conta_bancaria, email, site,
-                contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
-            RETURNING id;
+            INSERT INTO pessoajuridica (cnpj, razao_social, nome_fantasia, email)
+            VALUES ($1, $2, $3, $4) RETURNING id;
         `;
-        const values = [
-            cnpj, razao_social, nome_fantasia, inscricao_estadual, ramo_atividade,
-            data_fundacao, capital_social, telefones, conta_bancaria, email, site,
-            contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf
-        ];
+        const values = [cnpj, razao_social, nome_fantasia, email];
         const result = await pool.query(query, values);
-        res.json({ message: "Pessoa Jurídica cadastrada com sucesso!", id: result.rows[0].id });
+        res.status(201).json({ message: "Pessoa Jurídica criada com sucesso!", id: result.rows[0].id });
     } catch (error) {
-        console.error("Erro ao cadastrar Pessoa Jurídica:", error);
-        res.status(500).send("Erro ao cadastrar Pessoa Jurídica.");
+        console.error("Erro ao criar Pessoa Jurídica:", error);
+        res.status(500).json({ error: "Erro ao criar Pessoa Jurídica." });
     }
 });
 
+// **Listar Pessoas Jurídicas**
+app.get('/consultar/PessoaJuridica', async (req, res) => {
+    try {
+        const query = `SELECT * FROM pessoajuridica ORDER BY id`;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Erro ao listar Pessoas Jurídicas:", error);
+        res.status(500).json({ error: "Erro ao listar Pessoas Jurídicas." });
+    }
+});
 
-app.post('/salvar-tudo', async (req, res) => {
-    const { pessoaJuridica, socios, commercialRefs, bankRefs } = req.body;
-
-    const client = await pool.connect();
+// **Buscar Pessoa Jurídica por ID**
+app.get('/pessoa-juridica/:id', async (req, res) => {
+    const { id } = req.params;
 
     try {
-        // Inicia uma transação
-        await client.query('BEGIN');
+        const query = `SELECT * FROM pessoajuridica WHERE id = $1`;
+        const result = await pool.query(query, [id]);
 
-        // Inserir na tabela Pessoa Jurídica
-        const pessoaJuridicaQuery = `
-            INSERT INTO pessoajuridica (
-                cnpj, razao_social, nome_fantasia, inscricao_estadual, ramo_atividade,
-                data_fundacao, capital_social, telefones, conta_bancaria, email, site,
-                contador, telefone_contador, logradouro, numero_complemento, bairro, cidade, uf
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
-            RETURNING id;
-        `;
-        const pessoaJuridicaValues = [
-            pessoaJuridica.cnpj, pessoaJuridica.razao_social, pessoaJuridica.nome_fantasia,
-            pessoaJuridica.inscricao_estadual, pessoaJuridica.ramo_atividade, pessoaJuridica.data_fundacao,
-            pessoaJuridica.capital_social, pessoaJuridica.telefones, pessoaJuridica.conta_bancaria,
-            pessoaJuridica.email, pessoaJuridica.site, pessoaJuridica.contador,
-            pessoaJuridica.telefone_contador, pessoaJuridica.logradouro, pessoaJuridica.numero_complemento,
-            pessoaJuridica.bairro, pessoaJuridica.cidade, pessoaJuridica.uf,
-        ];
-        const pessoaJuridicaResult = await client.query(pessoaJuridicaQuery, pessoaJuridicaValues);
-        const pessoaJuridicaId = pessoaJuridicaResult.rows[0].id;
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Pessoa Jurídica não encontrada." });
+        }
 
-        
-        // Confirma a transação
-        await client.query('COMMIT');
-
-        res.json({ message: "Cadastro concluído com sucesso!" });
+        res.json(result.rows[0]);
     } catch (error) {
-        // Reverte a transação em caso de erro
-        await client.query('ROLLBACK');
-        console.error("Erro ao salvar os dados:", error);
-        res.status(500).json({ message: "Erro ao salvar os dados." });
-    } finally {
-        client.release();
+        console.error("Erro ao buscar Pessoa Jurídica:", error);
+        res.status(500).json({ error: "Erro ao buscar Pessoa Jurídica." });
     }
 });
 
+// **Atualizar Pessoa Jurídica**
+app.put('/pessoa-juridica/:id', async (req, res) => {
+    const { id } = req.params;
+    const { cnpj, razao_social, nome_fantasia, email } = req.body;
+
+    if (!cnpj || !razao_social || !email) {
+        return res.status(400).json({ error: "CNPJ, razão social e e-mail são obrigatórios." });
+    }
+
+    try {
+        const query = `
+            UPDATE pessoajuridica
+            SET cnpj = $1, razao_social = $2, nome_fantasia = $3, email = $4
+            WHERE id = $5;
+        `;
+        const values = [cnpj, razao_social, nome_fantasia, email, id];
+        const result = await pool.query(query, values);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Pessoa Jurídica não encontrada." });
+        }
+
+        res.json({ message: "Pessoa Jurídica atualizada com sucesso!" });
+    } catch (error) {
+        console.error("Erro ao atualizar Pessoa Jurídica:", error);
+        res.status(500).json({ error: "Erro ao atualizar Pessoa Jurídica." });
+    }
+});
+
+// **Excluir Pessoa Jurídica**
+app.delete('/pessoa-juridica/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const query = `DELETE FROM pessoajuridica WHERE id = $1`;
+        const result = await pool.query(query, [id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Pessoa Jurídica não encontrada." });
+        }
+
+        res.json({ message: "Pessoa Jurídica excluída com sucesso!" });
+    } catch (error) {
+        console.error("Erro ao excluir Pessoa Jurídica:", error);
+        res.status(500).json({ error: "Erro ao excluir Pessoa Jurídica." });
+    }
+});
 
 // Servidor rodando na porta 3000
 app.listen(3000, () => {
