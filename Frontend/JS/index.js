@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { id: "relacao_Faturamento", name: "Relação de faturamento dos últimos 12 meses" },
     ];
 
-    // === Validação do CNPJ ===
+    // === Validação do CNPJ === Melissa
     function validarCNPJ(cnpj) {
         cnpj = cnpj.replace(/[^\d]+/g, '');
         if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return resultado == digitos.charAt(1);
     }
 
-    // === Consultar CNPJ ===
+    // === Consultar CNPJ === Melissa
     async function buscarDadosCNPJ(cnpj) {
         try {
             const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
@@ -60,7 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
             cnpjInput.classList.add("is-invalid");
         }
     }
-   // === Formatar Capital Social ===
+
+   // === Formatar Capital Social === Raí
 function formatarMoeda(inputElement) {
     let valor = inputElement.value.replace(/[^\d]/g, ""); // Remove caracteres não numéricos
     if (valor) {
@@ -88,7 +89,7 @@ capitalSocialInput.addEventListener("input", () => {
     capitalSocialNumInput.value = numericValue;
 });
 
-// Preenchimento automático com formatação
+// Preenchimento automático com formatação --- Raí
 function preencherDadosEmpresa(data) {
     document.getElementById("razao_social").value = data.razao_social || '';
     document.getElementById("nome_fantasia").value = data.nome_fantasia || '';
@@ -124,7 +125,7 @@ function preencherDadosEmpresa(data) {
         });
     }
 
-    // === Configurar Drag-and-Drop ===
+    // === Configurar Drag-and-Drop === Raí
     function setupDropZone(dropZoneId, inputId, listId) {
         const dropZone = document.getElementById(dropZoneId);
         const input = document.getElementById(inputId);
@@ -180,12 +181,12 @@ function preencherDadosEmpresa(data) {
         });
     }
 
-    // Configuração das Zonas de Upload
+    // Configuração das Zonas de Upload ------- Raí
     setupDropZone("contrato-drop-zone", "contrato_Social", "contrato-list");
     setupDropZone("cnpj-drop-zone", "cartao_CNPJ", "cnpj-list");
     setupDropZone("faturamento-drop-zone", "relacao_Faturamento", "faturamento-list");
 
-    // === Validação de Formulário ===
+    // === Validação de Formulário === -------- Raí
     function validarFormulario() {
         const allFieldsFilled = Array.from(document.querySelectorAll("#pj-form input[required]"))
             .every(input => input.value.trim() !== "");
