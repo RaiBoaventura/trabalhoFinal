@@ -11,11 +11,12 @@
     <div class="container mt-5">
         <h1 class="text-center mb-4">CRUD - Pessoa Jurídica</h1>
         
-        <!-- Formulário de Cadastro -->
+        <!-- Formulário de Cadastro/Edição -->
         <div class="card mb-4">
-            <div class="card-header">Cadastrar Pessoa Jurídica</div>
+            <div class="card-header" id="formHeader">Cadastrar Pessoa Jurídica</div>
             <div class="card-body">
                 <form id="pessoaJuridicaForm">
+                    <input type="hidden" id="id"> <!-- Campo oculto para armazenar o ID ao editar -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="cnpj" class="form-label">CNPJ</label>
@@ -36,7 +37,7 @@
                             <input type="email" class="form-control" id="email" placeholder="Digite o e-mail">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    <button type="submit" class="btn btn-primary" id="submitButton">Cadastrar</button>
                 </form>
             </div>
         </div>
@@ -60,6 +61,21 @@
                         <!-- Dados serão preenchidos aqui -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Ver Detalhes -->
+    <div class="modal fade" id="verEmpresaModal" tabindex="-1" aria-labelledby="verEmpresaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="verEmpresaModalLabel">Detalhes da Empresa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="detalhesEmpresa"></div> <!-- Aqui serão exibidos os detalhes -->
+                </div>
             </div>
         </div>
     </div>
@@ -95,6 +111,7 @@
                             <td>
                                 <button class="btn btn-warning btn-sm" onclick="editarPessoa(${pessoa.id})">Editar</button>
                                 <button class="btn btn-danger btn-sm" onclick="deletarPessoa(${pessoa.id})">Excluir</button>
+                                <button class="btn btn-info btn-sm" onclick="verPessoa(${pessoa.id})">Ver</button>
                             </td>
                         </tr>
                     `;
@@ -104,31 +121,47 @@
             }
         }
 
-        // Função para cadastrar uma nova Pessoa Jurídica
-        document.getElementById('pessoaJuridicaForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); // Previne o reload da página
-
-            const novaPessoa = {
-                cnpj: document.getElementById('cnpj').value,
-                razao_social: document.getElementById('razao_social').value,
-                nome_fantasia: document.getElementById('nome_fantasia').value,
-                email: document.getElementById('email').value,
-            };
-
+        // Função para carregar os dados no formulário para edição
+        async function editarPessoa(id) {
             try {
-                await fetch(`${apiBaseUrl}/pessoa-juridica`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(novaPessoa),
-                });
+                const response = await fetch(`${apiBaseUrl}/pessoa-juridica/${id}`);
+                const pessoa = await response.json();
 
-                alert('Pessoa Jurídica cadastrada com sucesso!');
-                carregarPessoasJuridicas(); // Atualiza a lista
-                e.target.reset(); // Reseta o formulário
+                // Preencher os campos do formulário
+                document.getElementById('id').value = pessoa.id;
+                document.getElementById('cnpj').value = pessoa.cnpj;
+                document.getElementById('razao_social').value = pessoa.razao_social;
+                document.getElementById('nome_fantasia').value = pessoa.nome_fantasia;
+                document.getElementById('email').value = pessoa.email;
+
+                // Alterar o formulário para modo de edição
+                document.getElementById('formHeader').innerText = 'Editar Pessoa Jurídica';
+                document.getElementById('submitButton').innerText = 'Atualizar';
             } catch (error) {
-                console.error('Erro ao cadastrar Pessoa Jurídica:', error);
+                console.error('Erro ao carregar Pessoa Jurídica para edição:', error);
             }
-        });
+        }
+
+        // Função para visualizar os detalhes da empresa
+        async function verPessoa(id) {
+            try {
+                const response = await fetch(`${apiBaseUrl}/pessoa-juridica/${id}`);
+                const pessoa = await response.json();
+
+                const detalhes = `
+                    <p><strong>CNPJ:</strong> ${pessoa.cnpj}</p>
+                    <p><strong>Razão Social:</strong> ${pessoa.razao_social}</p>
+                    <p><strong>Nome Fantasia:</strong> ${pessoa.nome_fantasia}</p>
+                    <p><strong>Email:</strong> ${pessoa.email}</p>
+                    <!-- Adicione mais campos aqui -->
+                `;
+
+                document.getElementById('detalhesEmpresa').innerHTML = detalhes;
+                new bootstrap.Modal(document.getElementById('verEmpresaModal')).show();
+            } catch (error) {
+                console.error('Erro ao carregar os detalhes da empresa:', error);
+            }
+        }
 
         // Função para excluir uma Pessoa Jurídica
         async function deletarPessoa(id) {
@@ -141,12 +174,6 @@
             } catch (error) {
                 console.error('Erro ao excluir Pessoa Jurídica:', error);
             }
-        }
-
-        // Função para editar (não implementada totalmente, mas pronta para expansão)
-        function editarPessoa(id) {
-            alert(`Função editar ainda não implementada para o ID ${id}`);
-            // Aqui você pode abrir um modal para edição ou preencher os campos do formulário com os dados da pessoa selecionada.
         }
     </script>
 </body>
