@@ -3,8 +3,8 @@
 **Feito por:**
 
 - Raí Boaventura (GRR20241361)  
-- Melissa  
-- Pedro
+- Melissa de Medeiros Soares Galindo Cseh (GRR 20244829)
+- Pedro Loureiro de Lemos (GRR20244483)
 
 # Cadastro e Gerenciamento de Pessoas Jurídicas
 
