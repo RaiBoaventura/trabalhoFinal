@@ -1,136 +1,183 @@
-# Cadastro de CNPJs - Sistema de Gerenciamento
+### README.md
 
-Este projeto é um sistema simples de cadastro e gerenciamento de informações de **CNPJs**. Ele foi desenvolvido em HTML, CSS e JavaScript, e possui três páginas principais que, no futuro, serão integradas com um banco de dados para persistência dos dados.
+# Cadastro e Gerenciamento de Pessoas Jurídicas
 
----
-
-## **Funcionalidades**
-
-1. **Cadastro de CNPJs:**
-   - Validação do CNPJ com base no algoritmo oficial.
-   - Consulta automática de dados a partir da API pública **BrasilAPI**.
-   - Preenchimento automático dos campos como Razão Social, Nome Fantasia, Endereço e mais.
-
-2. **Anexar Documentos:**
-   - Upload de documentos necessários para o cadastro:
-     - Contrato Social e última alteração.
-     - Cartão CNPJ atualizado.
-     - Relação de faturamento dos últimos 12 meses.
-   - Funcionalidade de **drag-and-drop** e upload convencional.
-   - Opção de remover ou baixar documentos diretamente pela interface.
-
-3. **Validação de Formulário:**
-   - Verificação dinâmica dos campos obrigatórios e arquivos anexados.
-   - Botão "Avançar" habilitado apenas quando todos os campos são preenchidos.
-
-4. **Armazenamento Temporário:**
-   - Uso de `localStorage` para salvar dados temporariamente durante a navegação.
+Este projeto é uma aplicação completa para **cadastro**, **edição**, **listagem** e **remoção** de Pessoas Jurídicas. A aplicação é composta por uma interface web interativa, um back-end em Node.js, e persistência dos dados em um banco de dados PostgreSQL.
 
 ---
 
-## **Estrutura do Projeto**
+## Objetivo do Projeto
 
-### **Arquivos Principais**
-
-1. **`index.html`**: Página inicial para cadastro de CNPJs.
-2. **`socios.html`**: Página para inserção de dados sobre sócios da empresa.
-3. **`bancos.html`**: Página destinada a informações bancárias da empresa.
-
-### **Arquivos de Estilo**
-
-- **`style.css`**:
-  - Estilos globais para o site.
-  - Inclui estilos para drag-and-drop, validação de campos e layout responsivo.
-
-### **Scripts**
-
-- **`index.js`**:
-  - Validação de CNPJs.
-  - Configuração de drag-and-drop e upload de arquivos.
-  - Preenchimento automático de campos com dados obtidos da API.
-  - Gerenciamento da lógica de formulário.
+Facilitar o gerenciamento de empresas, oferecendo uma interface intuitiva para cadastrar e atualizar informações, além de suportar a validação de dados como CNPJ e e-mail.
 
 ---
 
-## **Como Configurar o Projeto**
+## Principais Recursos
 
-1. **Clone o repositório:**
+1. **Cadastro de Empresas**:
+   - Permite adicionar informações como CNPJ, razão social, endereço, e dados financeiros.
+   - Upload de documentos (contrato social, cartão CNPJ e relação de faturamento).
 
+2. **CRUD Completo**:
+   - Cadastrar novas empresas.
+   - Editar empresas existentes.
+   - Visualizar lista de empresas cadastradas.
+   - Remover empresas com confirmação.
+
+3. **Validação de Dados no Front-End**:
+   - Validação de CNPJ e preenchimento automático via API externa.
+   - Campos obrigatórios são verificados antes do envio.
+
+4. **Persistência no Back-End**:
+   - Os dados são armazenados em um banco de dados PostgreSQL.
+
+---
+
+## Tecnologias Utilizadas
+
+### Front-End
+- **HTML5 e CSS3** para estrutura e estilo.
+- **Bootstrap 5.3** para design responsivo.
+- **JavaScript Modular** para lógica da aplicação.
+
+### Back-End
+- **Node.js** com **Express.js** para construção do servidor.
+- **PostgreSQL** para gerenciamento do banco de dados.
+
+---
+
+
+## Configuração e Execução
+
+### Pré-requisitos
+- **Node.js** (v16 ou superior)
+- **PostgreSQL** instalado e configurado.
+
+
+### Configurando o Back-End
+
+1. Navegue até o diretório do projeto e instale as dependências:
    ```bash
-   git clone https://github.com/seu-usuario/cadastro-cnpjs.git
-   cd cadastro-cnpjs
+   npm install
    ```
-
-2. **Abra o projeto no navegador:**
-
-   - Abra o arquivo `index.html` diretamente no navegador para visualizar a aplicação.
-
----
-
-## **Funcionamento Detalhado**
-
-### **1. Validação de CNPJ**
-
-- O CNPJ digitado no campo é validado pelo **algoritmo oficial**.
-- Caso o CNPJ seja válido:
-  - Os dados são buscados da API **BrasilAPI**.
-  - Os campos do formulário são preenchidos automaticamente.
-- Caso inválido:
-  - Uma mensagem de erro é exibida e o usuário é solicitado a corrigir o número.
-
-### **2. Upload de Documentos**
-
-- Cada tipo de documento possui seu próprio campo de upload, com drag-and-drop habilitado.
-- Documentos anexados aparecem em uma lista com as seguintes opções:
-  - **Baixar**: Permite o download do arquivo anexado.
-  - **Remover**: Exclui o arquivo da lista.
-
-### **3. Navegação Entre Páginas**
-
-- Após preencher os campos obrigatórios e anexar os documentos, o botão "Avançar" redireciona o usuário para a próxima página:
-  - **`socios.html`**: Cadastro de sócios da empresa.
-  - **`bancos.html`**: Cadastro de informações bancárias.
-
-### **4. Armazenamento Local**
-
-- Durante a navegação, os dados são salvos temporariamente no **localStorage**.
-- Quando o sistema for integrado com um banco de dados, esses dados serão enviados diretamente ao servidor para persistência.
+2. Abra o arquivo `server.js` e configure o acesso ao banco de dados:
+   ```javascript
+   const pool = new Pool({
+       user: 'postgres',         // Seu usuário do PostgreSQL
+       host: 'localhost',        // Endereço do servidor do banco
+       database: 'CNPJteste',    // Nome do banco de dados
+       password: 'admin',        // Sua senha do PostgreSQL
+       port: 5432,               // Porta padrão do PostgreSQL
+   });
+   ```
+3. Inicie o servidor:
+   ```bash
+   node server.js
+   ```
+4. O servidor estará disponível em `http://localhost:3000`.
 
 ---
 
-## **Tecnologias Utilizadas**
+### Configurando o Front-End
 
-1. **Frontend:**
-   - **HTML5**: Estrutura do site.
-   - **CSS3**: Estilos responsivos e design visual.
-   - **JavaScript (ES6+)**: Lógica e interatividade do site.
-
-2. **Integrações:**
-   - **BrasilAPI**: API pública para consulta de dados de CNPJs.
-
-3. **Armazenamento Temporário:**
-   - **localStorage**: Gerenciamento de dados temporários no navegador.
+1. Certifique-se de que o servidor está em execução.
+2. Abra o arquivo `crud.html` ou `index.html` no navegador.
 
 ---
 
-## **Melhorias Futuras**
+## Funcionalidades em Detalhes
 
-1. **Integração com Banco de Dados:**
-   - Persistir informações dos CNPJs, sócios e dados bancários.
-   - Usar um backend (Node.js, Django, etc.) para gerenciar a comunicação.
+### Front-End
 
-2. **Autenticação de Usuários:**
-   - Adicionar login e controle de acesso.
+#### **index.html**: Página Inicial
 
-3. **Relatórios e Consultas:**
-   - Permitir geração de relatórios com dados cadastrados.
-   - Adicionar filtros para busca por CNPJ ou Razão Social.
+- Formulário para cadastro de novas empresas.
+- Validação de CNPJ e preenchimento automático via API externa.
+- Upload de documentos diretamente no formulário.
 
-4. **Validação Avançada:**
-   - Validar documentos anexados para garantir que sejam do tipo esperado (PDF, JPG, etc.).
+#### **crud.html**: Gerenciamento de Empresas
 
-5. **Melhorias de UI/UX:**
-   - Implementar alertas e mensagens de sucesso/erro mais claros.
-   - Melhorar a responsividade para dispositivos móveis.
+- **Cadastrar**: Adiciona novas empresas.
+- **Listar**: Exibe as empresas cadastradas em uma tabela.
+- **Editar**: Permite modificar os dados de uma empresa existente.
+- **Excluir**: Remove empresas com confirmação.
+
+### Back-End
+
+#### **Endpoints da API**
+
+| Método | Endpoint                          | Descrição                                  |
+|--------|-----------------------------------|-------------------------------------------|
+| `POST` | `/pessoa-juridica`                | Cadastra uma nova Pessoa Jurídica.        |
+| `GET`  | `/consultar/PessoaJuridica`       | Lista todas as Pessoas Jurídicas.         |
+| `GET`  | `/pessoa-juridica/:id`            | Retorna os detalhes de uma Pessoa Jurídica. |
+| `PUT`  | `/pessoa-juridica/:id`            | Atualiza uma Pessoa Jurídica pelo ID.     |
+| `DELETE` | `/pessoa-juridica/:id`          | Remove uma Pessoa Jurídica pelo ID.       |
+
+#### **Exemplo de Endpoint (Cadastro de Pessoa Jurídica)**
+
+```javascript
+app.post('/pessoa-juridica', async (req, res) => {
+    const { cnpj, razao_social, nome_fantasia, email } = req.body;
+
+    if (!cnpj || !razao_social || !email) {
+        return res.status(400).json({ error: "CNPJ, razão social e e-mail são obrigatórios." });
+    }
+
+    const query = `
+        INSERT INTO pessoajuridica (cnpj, razao_social, nome_fantasia, email)
+        VALUES ($1, $2, $3, $4) RETURNING id;
+    `;
+    const result = await pool.query(query, [cnpj, razao_social, nome_fantasia, email]);
+    res.status(201).json({ message: "Pessoa Jurídica criada com sucesso!", id: result.rows[0].id });
+});
+```
 
 ---
+
+## Fluxo de Cadastro
+
+1. **Preencher o formulário**:
+   - Insira o CNPJ, razão social e outros dados obrigatórios.
+   - Faça upload de documentos.
+
+2. **Validar os dados**:
+   - O CNPJ é validado automaticamente.
+   - Erros de preenchimento são destacados em vermelho.
+
+3. **Enviar os dados**:
+   - Clique em "Salvar" para cadastrar ou editar os dados.
+   - Uma mensagem de sucesso será exibida.
+
+---
+
+## Testando Localmente
+
+### Testando o Front-End
+Abra os arquivos HTML (`index.html` ou `crud.html`) no navegador e interaja com a interface.
+
+### Testando a API
+Use o **Postman** ou o comando `curl` para fazer chamadas às rotas. Exemplo:
+
+```bash
+curl -X POST http://localhost:3000/pessoa-juridica \
+-H "Content-Type: application/json" \
+-d '{
+  "cnpj": "12345678000190",
+  "razao_social": "Empresa Teste",
+  "nome_fantasia": "Fantasia Teste",
+  "email": "contato@empresa.com"
+}'
+```
+
+---
+
+## Melhorias Futuras
+
+1. Adicionar autenticação para acesso restrito.
+2. Melhorar o suporte para múltiplos documentos por registro.
+3. Implementar filtros na tabela de listagem no `crud.html`.
+
+---
+
+
