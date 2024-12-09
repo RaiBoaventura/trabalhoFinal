@@ -14,18 +14,6 @@ export async function enviarPessoaJuridica(data) {
     return response.json();
 }
 
-/**app.get("/pessoa-juridica", (req, res) => {
-    const query = "SELECT * FROM pessoajuridica"; // Altere para o nome da tabela
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error("Erro ao consultar o banco:", err);
-            res.status(500).send("Erro no servidor");
-            return;
-        }
-        res.json(results); // Retorna os dados como JSON
-    });
-});
-*/
 
 /**
  * Envia os dados de sócios ao servidor
@@ -54,12 +42,7 @@ export async function enviarReferenciasComerciais(data) {
     });
     return response.json();
 }
-/*app._router.stack.forEach((r) => {
-    if (r.route && r.route.path) {
-        console.log(r.route.path);
-    }
-});
-*/
+
 /**
  * Envia os dados bancários ao servidor
  * @param {Object} data - Dados bancários

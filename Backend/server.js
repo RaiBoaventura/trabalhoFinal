@@ -100,53 +100,7 @@ app.post('/pessoa-juridica', async (req, res) => {
         res.status(500).send("Erro ao cadastrar Pessoa Jurídica.");
     }
 });
-app.post('/referencias-comerciais', async (req, res) => {
-    const { pessoa_juridica_id, fornecedor, telefone, ramo, contato } = req.body;
 
-    try {
-        const query = `
-            INSERT INTO ReferenciasComerciais (pessoa_juridica_id, fornecedor, telefone, ramo, contato)
-            VALUES ($1, $2, $3, $4, $5);
-        `;
-        await pool.query(query, [pessoa_juridica_id, fornecedor, telefone, ramo, contato]);
-        res.json({ message: "Referência Comercial cadastrada com sucesso!" });
-    } catch (error) {
-        console.error("Erro ao cadastrar Referência Comercial:", error);
-        res.status(500).send("Erro ao cadastrar Referência Comercial.");
-    }
-});
-app.post('/referencias-bancarias', async (req, res) => {
-    const {
-        pessoa_juridica_id, banco, agencia, conta_bancaria, data_abertura, telefone, gerente, observacoes
-    } = req.body;
-
-    try {
-        const query = `
-            INSERT INTO ReferenciasBancarias (pessoa_juridica_id, banco, agencia, conta_bancaria, data_abertura, telefone, gerente, observacoes)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
-        `;
-        await pool.query(query, [pessoa_juridica_id, banco, agencia, conta_bancaria, data_abertura, telefone, gerente, observacoes]);
-        res.json({ message: "Referência Bancária cadastrada com sucesso!" });
-    } catch (error) {
-        console.error("Erro ao cadastrar Referência Bancária:", error);
-        res.status(500).send("Erro ao cadastrar Referência Bancária.");
-    }
-});
-app.post('/socios', async (req, res) => {
-    const { pessoa_juridica_id, nome, cpf, telefone, email, cargo } = req.body;
-
-    try {
-        const query = `
-            INSERT INTO Socios (pessoa_juridica_id, nome, cpf, telefone, email, cargo)
-            VALUES ($1, $2, $3, $4, $5, $6);
-        `;
-        await pool.query(query, [pessoa_juridica_id, nome, cpf, telefone, email, cargo]);
-        res.json({ message: "Sócio cadastrado com sucesso!" });
-    } catch (error) {
-        console.error("Erro ao cadastrar Sócio:", error);
-        res.status(500).send("Erro ao cadastrar Sócio.");
-    }
-});
 
 app.post('/salvar-tudo', async (req, res) => {
     const { pessoaJuridica, socios, commercialRefs, bankRefs } = req.body;
@@ -177,46 +131,7 @@ app.post('/salvar-tudo', async (req, res) => {
         const pessoaJuridicaResult = await client.query(pessoaJuridicaQuery, pessoaJuridicaValues);
         const pessoaJuridicaId = pessoaJuridicaResult.rows[0].id;
 
-        // Inserir Sócios
-        for (const socio of socios) {
-            const sociosQuery = `
-                INSERT INTO socios (
-                    nome, cep, endereco, numero, bairro, cidade, uf, telefone, email
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
-            `;
-            const sociosValues = [
-                socio.nome, socio.cep, socio.endereco, socio.numero, socio.bairro,
-                socio.cidade, socio.uf, socio.telefone, socio.email,
-            ];
-            await client.query(sociosQuery, sociosValues);
-        }
-
-        // Inserir Referências Comerciais
-        for (const ref of commercialRefs) {
-            const comercialQuery = `
-                INSERT INTO referenciascomerciais (
-                    pessoa_juridica_id, fornecedor, telefone, ramo_atividade, contato
-                ) VALUES ($1, $2, $3, $4, $5);
-            `;
-            const comercialValues = [
-                pessoaJuridicaId, ref.fornecedor, ref.telefone, ref.ramo, ref.contato,
-            ];
-            await client.query(comercialQuery, comercialValues);
-        }
-
-        // Inserir Referências Bancárias
-        for (const ref of bankRefs) {
-            const bancariaQuery = `
-                INSERT INTO bancos (
-                    banco, agencia, conta, data_abertura, telefone, gerente, observacoes
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7);
-            `;
-            const bancariaValues = [
-                ref.banco, ref.agencia, ref.conta, ref.dataAbertura, ref.telefone, ref.gerente, ref.observacoes,
-            ];
-            await client.query(bancariaQuery, bancariaValues);
-        }
-
+        
         // Confirma a transação
         await client.query('COMMIT');
 
