@@ -1,7 +1,10 @@
-# Trabalho feito por:
-** Raí Boaventura GRR20241361 **
-** Melissa **
-** Pedro **
+# Trabalho 
+
+**Feito por:**
+
+- Raí Boaventura (GRR20241361)  
+- Melissa  
+- Pedro
 
 # Cadastro e Gerenciamento de Pessoas Jurídicas
 
