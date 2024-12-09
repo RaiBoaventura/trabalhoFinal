@@ -238,7 +238,6 @@ function preencherDadosEmpresa(data) {
             const response = await enviarPessoaJuridica(empresaData);
             alert(response.message || "Dados salvos com sucesso!");
             localStorage.setItem("empresaId", response.id);
-            window.location.href = "socios.html";
         } catch (error) {
             console.error("Erro ao salvar os dados:", error);
             alert("Erro ao salvar os dados.");
